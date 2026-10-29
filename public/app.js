@@ -11262,7 +11262,7 @@
     var html = '<div class="kpi-head"><h2>SOP</h2><button type="button" class="ghost" id="sop-csv">Export CSV</button></div>';
     html += '<div class="sop-static"><p><strong>Who moves a card.</strong> ' + escapeHtml(StuffMigrate.SOP_MOVER_RULE) + ' Matrix Manager may move a card for any bot.</p>' +
       '<p><strong>When Owner is asked.</strong></p><ul>' + StuffMigrate.SOP_ESCALATIONS.map(function (t) { return '<li>' + escapeHtml(t) + '</li>'; }).join('') + '</ul>' +
-      '<p>Bot request format: <a href="https://github.com/catjiz/matrix-matrix/blob/main/MATRIX_WRITE_API.md" target="_blank" rel="noopener">MATRIX_WRITE_API.md</a>. ' +
+      '<p>Bot request format: <a href="README.md" target="_blank" rel="noopener">MATRIX_WRITE_API.md</a>. ' +
       'Owner check: <strong>' + escapeHtml(sopEnforceMode()) + '</strong>.</p></div>';
     html += '<div class="table-wrap"><table class="kpi-table sop-table"><thead><tr><th>Stage</th><th>Id</th><th>Owner</th><th>Moves in when</th><th>Exit criteria</th>' +
       '<th class="num">SLA days</th><th class="num">Cards now</th><th class="num">Over SLA now</th>' + (admin ? '<th></th>' : '') + '</tr></thead><tbody>';
