@@ -43,7 +43,7 @@ window.MATRIX_SEED = {
   },
   {
    "id": "partner-leads",
-   "label": "partner Leads",
+   "label": "Partner Leads",
    "area": "crm",
    "stages": [
     "partner-new",

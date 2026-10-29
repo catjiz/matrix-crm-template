@@ -1,3 +1,5 @@
+> New here? Start with the step-by-step guide: [docs/GETTING_STARTED.md](docs/GETTING_STARTED.md)
+
 # Matrix CRM (template)
 
 A single-page CRM and production tracker for a small molding / manufacturing shop: leads, quotes,
