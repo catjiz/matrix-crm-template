@@ -102,6 +102,9 @@
         "firebase-debug.log",
         "firebase-debug.*.log",
         "*.local"
+      ],
+      "postdeploy": [
+        "bash tools/post-deploy-invoker.sh"
       ]
     }
   ]
