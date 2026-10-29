@@ -1,0 +1,14 @@
+{
+  "name": "Matrix CRM",
+  "short_name": "Matrix",
+  "description": "Matrix CRM, Stuff Manufacturing internal system: leads, customers, pre-production and operations boards, tasks.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#111827",
+  "theme_color": "#111827",
+  "icons": [
+    { "src": "icons/matrix-logo.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" },
+    { "src": "icons/matrix-logo.png", "sizes": "1024x1024", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

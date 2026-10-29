@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Matrix CRM</title>
+  <meta name="theme-color" content="#111827" />
+  <meta name="application-name" content="Matrix CRM" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="Matrix CRM" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" type="image/svg+xml" href="icons/matrix-logo.svg" />
+  <link rel="apple-touch-icon" href="icons/matrix-logo.png" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header id="app-header" class="view-board">
+    <button type="button" class="logo-btn" id="btn-nav-toggle" aria-label="Toggle navigation menu" aria-expanded="true" title="Menu">
+      <img src="icons/matrix-logo.svg" alt="" class="logo-img" width="36" height="36" />
+    </button>
+    <a class="v2-link" id="v2-link" href="https://matrix-matrix-v2.web.app" target="_blank" rel="noopener" title="Open the Matrix redesign preview (V.2)">V.2</a>
+    <script>if (/v2/i.test(location.hostname)) { var v2l = document.getElementById('v2-link'); if (v2l) v2l.remove(); }</script>
+    <div class="board-title" id="context-title"></div>
+    <button type="button" class="header-tasks-btn" id="btn-header-search" title="Search (Ctrl+K)" aria-label="Search">
+      <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+    </button>
+    <button type="button" class="header-tasks-btn" id="btn-header-tasks" title="Tasks" aria-label="Open Tasks">
+      <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M9 11l3 3L22 4"/>
+        <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+      </svg>
+      <span class="header-tasks-badge hidden" id="header-tasks-badge">0</span>
+    </button>
+    <div class="header-user" id="header-user">
+      <button type="button" class="header-profile-btn" id="btn-header-profile" title="Profile and bot access" aria-label="Open your profile" hidden></button>
+      <div class="pop-wrap">
+        <button type="button" class="header-icon-btn" id="btn-header-menu" title="Settings" aria-label="Open settings menu" aria-haspopup="true" aria-expanded="false">
+          <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        </button>
+        <div class="pop-menu" id="header-menu" role="menu" hidden>
+          <div class="pop-note">Role: <span class="role-chip" id="role-chip" title="Current role (auth stub)">Admin</span></div>
+          <button type="button" class="pop-item" id="btn-header-sop" role="menuitem" title="Stage owners, exit criteria and SLAs">SOP</button>
+          <button type="button" class="pop-item" id="btn-header-admin" role="menuitem" title="Admin tools">Admin tools</button>
+          <button type="button" class="pop-item" id="btn-export" role="menuitem">Export</button>
+          <button type="button" class="pop-item" id="btn-import" role="menuitem">Import</button>
+        </div>
+      </div>
+    </div>
+    <div class="actions" id="board-actions">
+      <button type="button" id="btn-add" title="Add Deal">Add Deal</button>
+      <div class="pop-wrap">
+        <button type="button" class="secondary board-menu-btn" id="btn-board-menu" title="Board options" aria-label="Board options" aria-haspopup="true" aria-expanded="false">&hellip;</button>
+        <div class="pop-menu" id="board-menu" role="menu" hidden>
+          <button type="button" class="pop-item" id="btn-show-converted" role="menuitem" title="Show leads that are already won">Show won</button>
+          <button type="button" class="pop-item" id="btn-edit-stages" role="menuitem" title="Rename, reorder, add, or remove stages on this board">Edit stages</button>
+          <button type="button" class="pop-item" id="btn-edit-menu" role="menuitem" title="Rename, reorder, add, or remove areas and boards">Edit menu</button>
+        </div>
+      </div>
+      <input type="file" id="import-file" accept="application/json,.json" />
+    </div>
+  </header>
+
+  <div class="app-shell" id="app-shell">
+    <aside class="left-rail" id="left-rail" aria-label="Primary navigation"></aside>
+    <div class="nav-scrim" id="nav-scrim" aria-hidden="true"></div>
+    <div class="app-main">
+      <div id="view-board" class="view-panel active">
+        <div id="followup-strip"></div>
+        <div class="board-wrap">
+          <div class="prod-view-bar" id="prod-view-bar" hidden></div>
+          <div class="board-viewbar" id="board-viewbar" hidden></div>
+          <p class="board-note" id="board-note"></p>
+          <div id="board"></div>
+          <div class="board-table-wrap" id="board-table-root" hidden></div>
+          <div id="prod-view-root" hidden></div>
+        </div>
+      </div>
+
+      <div id="view-kpis" class="view-panel">
+        <div class="page-wrap" id="kpis-root"></div>
+      </div>
+
+      <div id="view-today" class="view-panel">
+        <div class="page-wrap" id="today-root"></div>
+      </div>
+
+      <div id="view-tasks" class="view-panel">
+        <div class="page-wrap" id="tasks-root"></div>
+      </div>
+
+      <div id="detail-scrim" aria-hidden="true"></div>
+      <div id="view-detail" class="view-panel" role="dialog" aria-label="Card editor">
+        <div class="page-wrap" id="detail-root"></div>
+      </div>
+
+      <div id="view-customers" class="view-panel">
+        <div class="page-wrap" id="customers-root"></div>
+      </div>
+
+      <div id="view-leads" class="view-panel">
+        <div class="page-wrap" id="leads-root"></div>
+      </div>
+
+      <div id="view-skus" class="view-panel">
+        <div class="page-wrap" id="skus-root"></div>
+      </div>
+
+      <div id="view-billing" class="view-panel">
+        <div class="page-wrap" id="billing-root"></div>
+      </div>
+
+      <div id="view-cs" class="view-panel">
+        <div class="page-wrap" id="cs-root"></div>
+      </div>
+
+      <div id="view-reply" class="view-panel">
+        <div class="page-wrap" id="reply-root"></div>
+      </div>
+
+      <div id="view-needs-reply" class="view-panel">
+        <div class="page-wrap" id="needs-reply-root"></div>
+      </div>
+
+      <div id="view-archived" class="view-panel">
+        <div class="page-wrap" id="archived-root"></div>
+      </div>
+
+      <div id="view-materials" class="view-panel">
+        <div class="page-wrap" id="materials-root"></div>
+      </div>
+
+      <div id="view-profile" class="view-panel">
+        <div class="page-wrap" id="profile-root"></div>
+      </div>
+
+      <div id="view-sop" class="view-panel">
+        <div class="page-wrap" id="sop-root"></div>
+      </div>
+
+      <div id="view-admin" class="view-panel">
+        <div class="page-wrap" id="admin-root"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="modal-backdrop" role="dialog" aria-modal="true">
+    <div class="modal" id="modal">
+      <div class="modal-title-row">
+        <h2 id="modal-title">Deal</h2>
+        <button type="button" id="btn-modal-open" style="display:none">Open</button>
+      </div>
+      <div id="modal-tldr"></div>
+      <div id="modal-progress-root"></div>
+      <form id="deal-form">
+        <div class="row">
+          <div class="field">
+            <label for="f-company">Company</label>
+            <input type="text" id="f-company" required />
+          </div>
+          <div class="field">
+            <label for="f-stage">Stage</label>
+            <select id="f-stage"></select>
+          </div>
+        </div>
+        <div class="row">
+          <div class="field">
+            <label for="f-contact">Contact name</label>
+            <input type="text" id="f-contact" />
+          </div>
+          <div class="field">
+            <label for="f-source">Source</label>
+            <select id="f-source"></select>
+          </div>
+        </div>
+        <div class="row">
+          <div class="field">
+            <label for="f-email">Contact email</label>
+            <input type="email" id="f-email" />
+          </div>
+        </div>
+        <div class="row">
+          <div class="field">
+            <label for="f-phone">Contact phone</label>
+            <input type="tel" id="f-phone" />
+          </div>
+          <div class="field">
+            <label for="f-followup">Next follow-up</label>
+            <input type="date" id="f-followup" />
+          </div>
+        </div>
+        <div class="row values-grid">
+          <div class="field">
+            <label for="f-designDfm">Design/DFM ($)</label>
+            <input type="number" id="f-designDfm" min="0" step="any" value="0" />
+          </div>
+          <div class="field">
+            <label for="f-prototyping">Prototyping ($)</label>
+            <input type="number" id="f-prototyping" min="0" step="any" value="0" />
+          </div>
+          <div class="field">
+            <label for="f-tooling">Tooling ($)</label>
+            <input type="number" id="f-tooling" min="0" step="any" value="0" />
+          </div>
+          <div class="field" style="display:none">
+            <label for="f-productionArr">Production ARR ($)</label>
+            <input type="number" id="f-productionArr" min="0" step="any" value="0" />
+          </div>
+          <div class="field" style="display:none">
+            <label for="f-currentPo">Current PO ($)</label>
+            <input type="number" id="f-currentPo" min="0" step="any" value="0" />
+          </div>
+          <div class="field">
+            <label for="f-partnerServices">Partner Services ($)</label>
+            <input type="number" id="f-partnerServices" min="0" step="any" value="0" />
+          </div>
+        </div>
+        <p class="totals-line">Total value: <strong id="f-total">$0</strong></p>
+
+        <div class="section-title">Notes</div>
+        <div class="note-add">
+          <textarea id="f-note-text" aria-label="New note" placeholder="Add a note..."></textarea>
+          <button type="button" class="ghost" id="btn-add-note">Add note</button>
+        </div>
+        <ul class="notes-list" id="notes-list"></ul>
+
+        <div class="section-title">Comms (coming)</div>
+        <div class="comms-stub">Timeline for email and Meet activity. Not wired yet.</div>
+
+        <div class="section-title">Files</div>
+        <div class="files-compact" id="modal-files-root"></div>
+
+        <div class="modal-actions">
+          <button type="button" class="danger" id="btn-delete">Delete</button>
+          <span class="spacer"></span>
+          <button type="button" class="ghost" id="btn-cancel">Cancel</button>
+          <button type="button" id="btn-modal-open-footer" style="display:none">Open</button>
+          <button type="submit" id="btn-save">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <div class="modal-backdrop" id="contact-modal-backdrop" role="dialog" aria-modal="true">
+    <div class="modal modal-sm" id="contact-modal">
+      <div class="modal-title-row"><h2 id="contact-modal-title">Contact</h2></div>
+      <form id="contact-form">
+        <div class="row">
+          <div class="field"><label for="c-name">Name</label><input type="text" id="c-name" required /></div>
+          <div class="field"><label for="c-role">Role / title</label><input type="text" id="c-role" /></div>
+        </div>
+        <div class="row">
+          <div class="field"><label for="c-email">Email</label><input type="email" id="c-email" /></div>
+          <div class="field"><label for="c-phone">Phone</label><input type="tel" id="c-phone" /></div>
+        </div>
+        <details class="contact-more" id="c-more"><summary>Add details</summary>
+        <div class="row">
+          <div class="field"><label for="c-buying-role">Buying role</label><select id="c-buying-role"><option value="">Not set</option><option value="buyer">Buyer</option><option value="ap">AP</option><option value="technical">Technical</option><option value="founder">Founder</option><option value="other">Other</option></select></div>
+          <div class="field"><label class="check-line"><input type="checkbox" id="c-decision-maker" /> Decision maker</label></div>
+        </div>
+        </details>
+        <div class="field"><label for="c-notes">Notes</label><textarea id="c-notes" rows="2"></textarea></div>
+        <label class="check-line"><input type="checkbox" id="c-primary" /> Primary contact</label>
+        <div class="modal-actions">
+          <button type="button" class="danger" id="c-delete">Delete</button>
+          <span class="spacer"></span>
+          <button type="button" class="secondary" id="c-log" title="Log a call, meeting or note">Log</button>
+          <button type="button" class="ghost" id="c-cancel">Cancel</button>
+          <button type="submit" id="c-save">Save contact</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <!-- Global search (#60). Filled by app.js. -->
+  <div class="modal-backdrop gs-backdrop" id="gs-backdrop" role="dialog" aria-modal="true" aria-label="Search">
+    <div class="modal gs-modal" id="gs-modal">
+      <input type="search" id="gs-input" autocomplete="off" placeholder="Search anything. l: c: p: s: v: to filter" aria-label="Search" />
+      <div class="gs-list" id="gs-list" role="listbox"></div>
+    </div>
+  </div>
+  <button type="button" class="qlog-fab" id="qlog-fab" aria-label="Quick log" title="Quick log">+</button>
+
+  <!-- SKU jobs (#3): Mark won, customer quote, customer PO, Add SKU, fill from quote. Filled by app.js. -->
+  <div class="modal-backdrop" id="job-modal-backdrop" role="dialog" aria-modal="true">
+    <div class="modal" id="job-modal"></div>
+  </div>
+
+  <div class="modal-backdrop" id="quote-modal-backdrop" role="dialog" aria-modal="true">
+    <div class="modal" id="quote-modal">
+      <div class="modal-title-row"><h2 id="vq-title">Add vendor quote</h2></div>
+      <form id="quote-form">
+        <div class="row">
+          <div class="field"><label for="vq-vendor">Vendor</label><select id="vq-vendor"></select></div>
+          <div class="field"><label for="vq-material">Material</label><select id="vq-material"></select></div>
+        </div>
+        <div class="row">
+          <div class="field" id="vq-new-vendor-wrap"><label for="vq-new-vendor">New vendor name</label><input type="text" id="vq-new-vendor" /></div>
+          <div class="field" id="vq-new-material-wrap"><label for="vq-new-material">New material name</label><input type="text" id="vq-new-material" placeholder="e.g. KE-1950-40 A/B" />
+            <label for="vq-new-material-type" class="sub-label">Material type</label><select id="vq-new-material-type"></select></div>
+        </div>
+        <div class="row">
+          <div class="field"><label for="vq-price">Price</label><input type="number" id="vq-price" min="0" step="any" required /></div>
+          <div class="field"><label for="vq-unit">Per</label><select id="vq-unit"></select></div>
+          <div class="field"><label for="vq-currency">Currency</label><input type="text" id="vq-currency" value="USD" maxlength="3" /></div>
+        </div>
+        <div class="row">
+          <div class="field"><label for="vq-moq">MOQ (in units above)</label><input type="text" id="vq-moq" /></div>
+          <div class="field"><label for="vq-lead">Lead time (days)</label><input type="text" id="vq-lead" /></div>
+          <div class="field"><label for="vq-ref">Quote reference #</label><input type="text" id="vq-ref" /></div>
+        </div>
+        <div class="row">
+          <div class="field"><label for="vq-date">Quote date</label><input type="date" id="vq-date" /></div>
+          <div class="field"><label for="vq-valid">Valid until</label><input type="date" id="vq-valid" /></div>
+          <div class="field"><label for="vq-freight">Freight / terms</label><input type="text" id="vq-freight" placeholder="FOB origin, prepaid and add" /></div>
+        </div>
+        <div class="field"><label for="vq-breaks">Price breaks (one per line: qty @ price)</label><textarea id="vq-breaks" rows="2" placeholder="200 @ 11.80&#10;1000 @ 10.95"></textarea></div>
+        <div class="field"><label for="vq-notes">Notes</label><textarea id="vq-notes" rows="2"></textarea></div>
+        <div class="field"><label for="vq-file">Quote PDF (optional)</label><input type="file" id="vq-file" /><div class="muted-note" id="vq-file-current"></div></div>
+        <div class="modal-actions">
+          <button type="button" class="danger" id="vq-delete">Delete</button>
+          <span class="spacer"></span>
+          <button type="button" class="ghost" id="vq-cancel">Cancel</button>
+          <button type="submit" id="vq-save">Save quote</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="firebase-config.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+  <script src="matrix-cloud.js"></script>
+  <script src="seed-data.js"></script>
+  <script src="migrate-v12.js"></script>
+  <script src="app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('sw.js').catch(function () { /* offline shell optional */ });
+      });
+    }
+  </script>
+</body>
+</html>

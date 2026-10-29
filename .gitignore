@@ -1,0 +1,28 @@
+# deps / local
+node_modules/
+.firebase/
+firebase-debug.log
+firebase-debug.*.log
+*.log
+.DS_Store
+
+# local secrets (never commit)
+.firebaserc.local
+*-service-account.json
+.env
+.env.*
+
+# optional local build junk
+dist/
+
+# copied into functions/ by the firebase.json predeploy (source of truth: migrate-v12.js)
+functions/shared/
+
+# smoke test screenshots
+tools/shot-*.png
+
+# Python bytecode from tools/*.py
+__pycache__/
+
+functions/node_modules
+.firebaserc

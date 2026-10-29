@@ -1,0 +1,78 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null && request.auth.token.email != null;
+    }
+    // Expand this list when Owner adds teammates. Keep in sync with window.MATRIX_ALLOWLIST in firebase-config.js
+    function allowedEmail() {
+      return request.auth.token.email.lower() in [
+        'you@example.com',
+        'teammate@example.com'
+      ];
+    }
+    function isAllowed() {
+      return signedIn() && allowedEmail();
+    }
+
+    // Full CRM state blob (fast path for current localStorage-shaped app)
+    match /workspace/{docId} {
+      allow read, write: if isAllowed();
+    }
+
+    // Split storage (issue #103): with settings.storage = 'split' each record is its own document,
+    // workspace/main/{collection}/{id}. Same access as workspace/main. Change log entries are never
+    // deleted except by Owner (the split tool removes leftovers of an earlier copy).
+    match /workspace/{ws}/{col}/{id} {
+      allow read: if isAllowed();
+      allow create, update: if isAllowed() && request.resource.data.id == id;
+      allow delete: if isAllowed() && (col != 'changeLog' || request.auth.token.email.lower() == 'you@example.com');
+    }
+
+    // Time machine copies of workspace/main (split tool archive, chunked). Owner only; never edited or deleted.
+    match /workspaceSnapshots/{id} {
+      allow read, create: if isAllowed() && request.auth.token.email.lower() == 'you@example.com';
+      allow update, delete: if false;
+      match /chunks/{n} {
+        allow read, create: if isAllowed() && request.auth.token.email.lower() == 'you@example.com';
+        allow update, delete: if false;
+      }
+    }
+
+    // Future split collections (optional; same ACL)
+    match /customers/{id} {
+      allow read, write: if isAllowed();
+    }
+    match /deals/{id} {
+      allow read, write: if isAllowed();
+    }
+    match /projects/{id} {
+      allow read, write: if isAllowed();
+    }
+    match /meta/{id} {
+      allow read, write: if isAllowed();
+    }
+
+    // Phase 1: profiles / bot access — allowlisted RW.
+    // Phase 3 will tighten to roles + section grants (see CLAUDE_MATRIX_WRITE_PATH_BRIEF.md).
+    match /users/{id} {
+      allow read, write: if isAllowed();
+    }
+    match /botAccessRequests/{id} {
+      allow read, write: if isAllowed();
+    }
+    match /botGrants/{id} {
+      allow read, write: if isAllowed();
+    }
+    // Bot keys (#63): only the SHA-256 is stored. Owner (admin) lists, creates and revokes from
+    // Access admin; patchDeals reads it with the Admin SDK. Never deleted; revoke sets status.
+    match /botKeys/{id} {
+      allow read, create, update: if isAllowed() && request.auth.token.email.lower() == 'you@example.com';
+      allow delete: if false;
+    }
+    // Backup status docs (#111): written by nightlyBackup. Owner reads and writes them in Admin > Backups.
+    match /backups/{id} {
+      allow read, write: if isAllowed() && request.auth.token.email.lower() == 'you@example.com';
+    }
+  }
+}

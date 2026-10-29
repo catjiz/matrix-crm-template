@@ -1,0 +1,108 @@
+{
+  "hosting": {
+    "public": "public",
+    "predeploy": [
+      "python3 tools/build-public.py --stamp"
+    ],
+    "ignore": [
+      "**/.*",
+      "**/.*/**",
+      "**/node_modules/**",
+      "*.log",
+      "*.md",
+      "*.json"
+    ],
+    "headers": [
+      {
+        "source": "**/*.@(js|css|svg|png|webmanifest)",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "public,max-age=300"
+          }
+        ]
+      },
+      {
+        "source": "sw.js",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-cache"
+          }
+        ]
+      }
+    ],
+    "rewrites": [
+      {
+        "source": "/api/patchDeals",
+        "function": {
+          "functionId": "patchDeals",
+          "region": "us-central1"
+        }
+      },
+      {
+        "source": "/api/jotformIntake",
+        "function": {
+          "functionId": "jotformIntake",
+          "region": "us-central1"
+        }
+      },
+      {
+        "source": "/api/csProjects",
+        "function": {
+          "functionId": "csProjects",
+          "region": "us-central1"
+        }
+      },
+      {
+        "source": "/api/backupAdmin",
+        "function": {
+          "functionId": "backupAdmin",
+          "region": "us-central1"
+        }
+      },
+      {
+        "source": "/api/followUpSweep",
+        "function": {
+          "functionId": "followUpSweep",
+          "region": "us-central1"
+        }
+      },
+      {
+        "source": "/api/gmailLink",
+        "function": {
+          "functionId": "gmailLink",
+          "region": "us-central1"
+        }
+      },
+      {
+        "source": "/api/seedHelperBotBotGrant",
+        "function": {
+          "functionId": "seedHelperBotBotGrant",
+          "region": "us-central1"
+        }
+      }
+    ]
+  },
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "functions": [
+    {
+      "source": "functions",
+      "codebase": "default",
+      "runtime": "nodejs22",
+      "predeploy": [
+        "mkdir -p \"$RESOURCE_DIR/shared\" && cp migrate-v12.js \"$RESOURCE_DIR/shared/migrate-v12.js\""
+      ],
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "*.local"
+      ]
+    }
+  ]
+}
